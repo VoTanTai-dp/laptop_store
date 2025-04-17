@@ -1,0 +1,246 @@
+# Common references
+components:
+  schemas:
+    Laptop:
+      type: object
+      properties:
+        L_ID:
+          type: integer
+          readOnly: true # Returned by HTTP GET
+        L_BRAND:
+          type: string
+          description: laptop brand
+        L_NAME:
+          type: string
+          description: laptop name
+        L_MODEL:
+          type: string
+          description: laptop model
+        L_PRICE:
+          type: string # Use string to handle decimal values accurately
+          description: laptop price in decimal format (e.g., 1999.99)
+          example: "1999.99"
+        L_CPU:
+          type: string
+          description: laptop CPU
+        L_RAM:
+          type: string
+          description: laptop RAM
+        L_STORAGE:
+          type: string
+          description: laptop storage
+        L_GPU:
+          type: string
+          description: laptop GPU
+        L_SCREEN_SIZE:
+          type: string
+          description: laptop screen size
+        L_WEIGHT:
+          type: string # Use string to handle decimal values
+          description: laptop weight in decimal format (e.g., 1.25 kg)
+          example: "1.25"
+        L_DESCRIPTION:
+          type: string
+          description: laptop detail
+        image:
+          type: string
+          readOnly: true # Returned by HTTP GET
+          description: laptop image file path
+        L_IMAGE:
+          type: string
+          format: binary
+          writeOnly: true # Used in POST/PUT/PATCH
+          description: laptop avatar file
+        L_QUANTITY:
+          type: integer
+          description: laptop quantity
+
+    Customer:
+      type: object
+      properties:
+        C_ID:
+          type: integer
+          readOnly: true # Returned by HTTP GET
+        C_NAME:
+          type: string
+          description: customer name
+        C_EMAIL:
+          type: string
+          description: customer email
+        C_PASSWORD:
+          type: string
+          description: customer password
+        C_PHONE:
+          type: string
+          description: customer phone
+        C_ROLE:
+          type: integer
+          description: customer role
+
+    Cart:
+      type: object
+      properties:
+        CAR_ID:
+          type: integer
+          readOnly: true # Returned by HTTP GET
+        C_ID:
+          type: integer
+          description: customer id
+        L_ID:
+          type: integer
+          description: laptop id
+        CAR_DATE:
+          type: string
+          description: cart date
+        CAR_QUANTITY:
+          type: integer
+          description: cart quantity
+
+    Order:
+      type: object
+      properties:
+        O_ID:
+          type: integer
+          readOnly: true # Returned by HTTP GET
+        O_DATE:
+          type: string
+          description: order date
+        O_TOTAL:
+          type: string
+          description: order total in decimal format (e.g., 1999.99)
+          example: "1999.99"
+        O_SHIPPING_ADDRESS:
+          type: string
+          description: order shipping address
+
+    PaginationMetadata:
+      type: object
+      properties:
+        totalRecords:
+          type: integer
+          default: 0
+          description: The total number of records
+        firstPage:
+          type: integer
+          default: 1
+          description: The first page
+        lastPage:
+          type: integer
+          default: 1
+          description: The last page
+        page:
+          type: integer
+          default: 1
+          description: The current page
+        limit:
+          type: integer
+          default: 5
+          description: The number of records per page
+
+  responses:
+    "200NoData":
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: The response status
+                enum:
+                  - success
+              data:
+                type: object
+                nullable: true
+                default: null
+                description: The response data
+
+    "400BadRequest":
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: The response status
+                enum:
+                  - error
+              message:
+                type: string
+                description: The error message
+
+    "404NotFound":
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: The response status
+                enum:
+                  - error
+              message:
+                type: string
+                description: The error message
+
+    "405MethodNotAllowed":
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: The response status
+                enum:
+                  - error
+              message:
+                type: string
+                description: The error message
+
+    "500InternalServerError":
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: The response status
+                enum:
+                  - error
+              message:
+                type: string
+                description: The error message
+
+  parameters:
+    idParam:
+      name: id
+      description: ID parameter
+      required: true
+      in: path
+      schema:
+        type: integer
+
+    limitParam:
+      name: limit
+      description: Number of records per page
+      in: query
+      schema:
+        type: integer
+        default: 5
+        minimum: 1
+        maximum: 100
+      required: false
+
+    pageParam:
+      name: page
+      description: Page number of records
+      in: query
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+      required: false
